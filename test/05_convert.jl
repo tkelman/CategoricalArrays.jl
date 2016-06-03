@@ -8,17 +8,17 @@ module TestConvert
     convert(CategoricalPool{Float64}, pool)
     convert(CategoricalPool, pool)
 
-    cv1 = NominalValue(1, pool)
-    cv2 = NominalValue(2, pool)
-    cv3 = NominalValue(3, pool)
+    nv1 = NominalValue(1, pool)
+    nv2 = NominalValue(2, pool)
+    nv3 = NominalValue(3, pool)
 
-    convert(Int32, cv1)
-    convert(Int32, cv2)
-    convert(Int32, cv3)
+    convert(Int32, nv1)
+    convert(Int32, nv2)
+    convert(Int32, nv3)
 
-    convert(UInt8, cv1)
-    convert(UInt8, cv2)
-    convert(UInt8, cv3)
+    convert(UInt8, nv1)
+    convert(UInt8, nv2)
+    convert(UInt8, nv3)
 
     opool = CategoricalPool([1, 2, 3], [3, 2, 1])
     convert(CategoricalPool{Float64}, opool)

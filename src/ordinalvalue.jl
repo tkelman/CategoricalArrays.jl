@@ -1,4 +1,4 @@
-function OrdinalValue(level::Integer, pool::CategoricalPool)
+function OrdinalValue(level::Integer, pool::OrdinalPool)
     return OrdinalValue(convert(RefType, level), pool)
 end
 

@@ -16,30 +16,30 @@ module TestHash
     @test (hash(opool1) == hash(opool2)) === false
     @test (hash(opool2) == hash(opool2)) === true
 
-    cv1a = OrdinalValue(1, pool1)
-    cv2a = OrdinalValue(1, pool2)
-    cv1b = OrdinalValue(2, pool1)
-    cv2b = OrdinalValue(2, pool2)
+    nv1a = OrdinalValue(1, pool1)
+    nv2a = OrdinalValue(1, pool2)
+    nv1b = OrdinalValue(2, pool1)
+    nv2b = OrdinalValue(2, pool2)
 
-    @test (hash(cv1a) == hash(cv1a)) == true
-    @test (hash(cv1a) == hash(cv2a)) == false
-    @test (hash(cv1a) == hash(cv1b)) == false
-    @test (hash(cv1a) == hash(cv2b)) == false
+    @test (hash(nv1a) == hash(nv1a)) == true
+    @test (hash(nv1a) == hash(nv2a)) == false
+    @test (hash(nv1a) == hash(nv1b)) == false
+    @test (hash(nv1a) == hash(nv2b)) == false
 
-    @test (hash(cv1b) == hash(cv1a)) == false
-    @test (hash(cv1b) == hash(cv2a)) == false
-    @test (hash(cv1b) == hash(cv1b)) == true
-    @test (hash(cv1b) == hash(cv2b)) == false
+    @test (hash(nv1b) == hash(nv1a)) == false
+    @test (hash(nv1b) == hash(nv2a)) == false
+    @test (hash(nv1b) == hash(nv1b)) == true
+    @test (hash(nv1b) == hash(nv2b)) == false
 
-    @test (hash(cv2a) == hash(cv1a)) == false
-    @test (hash(cv2a) == hash(cv2a)) == true
-    @test (hash(cv2a) == hash(cv1b)) == false
-    @test (hash(cv2a) == hash(cv2b)) == false
+    @test (hash(nv2a) == hash(nv1a)) == false
+    @test (hash(nv2a) == hash(nv2a)) == true
+    @test (hash(nv2a) == hash(nv1b)) == false
+    @test (hash(nv2a) == hash(nv2b)) == false
 
-    @test (hash(cv2b) == hash(cv1a)) == false
-    @test (hash(cv2b) == hash(cv2a)) == false
-    @test (hash(cv2b) == hash(cv1b)) == false
-    @test (hash(cv2b) == hash(cv2b)) == true
+    @test (hash(nv2b) == hash(nv1a)) == false
+    @test (hash(nv2b) == hash(nv2a)) == false
+    @test (hash(nv2b) == hash(nv1b)) == false
+    @test (hash(nv2b) == hash(nv2b)) == true
 
     ov1a = OrdinalValue(1, opool1)
     ov2a = OrdinalValue(1, opool2)

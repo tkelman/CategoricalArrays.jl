@@ -3,17 +3,17 @@
 # V is always set to NominalValue{T} or OrdinalValue{T}
 # This workaround is needed since this type not defined yet
 # See JuliaLang/julia#269
-immutable CategoricalPool{T, V}
+immutable CategoricalPool{V, T}
     index::Vector{T}
     invindex::Dict{T, RefType}
     order::Vector{RefType}
     valindex::Vector{V}
 
-    function CategoricalPool{T}(index::Vector{T},
-                                invindex::Dict{T, RefType},
-                                order::Vector{RefType})
-        pool = new{T, OrdinalValue{T}}(index, invindex, order, V[])
-        buildvalues!(pool, OrdinalValue)
+    function CategoricalPool{V, T}(index::Vector{T},
+                                   invindex::Dict{T, RefType},
+                                   order::Vector{RefType})
+        pool = new{V, T}(index, invindex, order, V[])
+        buildvalues!(pool)
     end
 end
 
@@ -21,13 +21,19 @@ end
 
 immutable NominalValue{T}
     level::RefType
-    pool::CategoricalPool{T}
+    pool::CategoricalPool{NominalValue{T}, T}
 end
 
 immutable OrdinalValue{T}
     level::RefType
-    opool::CategoricalPool{T}
+    opool::CategoricalPool{NominalValue{T}, T}
 end
+
+
+## Pool aliases
+
+typealias NominalPool{T} CategoricalPool{T, NominalValue{T}}
+typealias OrdinalPool{T} CategoricalPool{T, OrdinalValue{T}}
 
 
 ## Arrays

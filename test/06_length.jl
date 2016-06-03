@@ -3,8 +3,8 @@ module TestLength
     using CategoricalData
 
     pool = CategoricalPool([1, 2, 3])
-    opool = CategoricalPool([1, 2, 3], [3, 2, 1])
-
     @test length(pool) == 3
+
+    opool = CategoricalPool([1, 2, 3], [3, 2, 1])
     @test length(opool) == 3
 end

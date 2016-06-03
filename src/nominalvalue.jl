@@ -1,5 +1,5 @@
-function NominalValue(level::Integer, pool::CategoricalPool)
-    return NominalValue{CategoricalPool}(convert(RefType, level), pool)
+function NominalValue(level::Integer, pool::NominalPool)
+    return NominalValue(convert(RefType, level), pool)
 end
 
 Base.convert{T}(::Type{NominalValue{T}}, x::NominalValue{T}) = x
