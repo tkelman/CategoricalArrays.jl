@@ -1,15 +1,15 @@
-function CategoricalPool{V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T}, order::Vector{RefType})
+function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T}, order::Vector{RefType})
     invindex = convert(Dict{S, RefType}, invindex)
     CategoricalPool{V, S}(index, invindex, order)
 end
 
-function CategoricalPool{V, T}(index::Vector{T})
+function (::CategoricalPool{V}){V, T}(index::Vector{T})
     invindex = buildinvindex(index)
     order = buildorder(index)
     return CategoricalPool{V}(index, invindex, order)
 end
 
-function CategoricalPool{V, S, T <: Integer}(invindex::Dict{S, T})
+function (::CategoricalPool{V}){V, S, T <: Integer}(invindex::Dict{S, T})
     invindex = convert(Dict{S, RefType}, invindex)
     index = buildindex(invindex)
     order = buildorder(index)
@@ -17,19 +17,19 @@ function CategoricalPool{V, S, T <: Integer}(invindex::Dict{S, T})
 end
 
 # TODO: Add tests for this
-function CategoricalPool{V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T})
+function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T})
     invindex = convert(Dict{S, RefType}, invindex)
     order = buildorder(index)
     return CategoricalPool{V}(index, invindex, order)
 end
 
-function CategoricalPool{V, T}(index::Vector{T}, ordered::Vector{T})
+function (::CategoricalPool{V}){V, T}(index::Vector{T}, ordered::Vector{T})
     invindex = buildinvindex(index)
     order = buildorder(invindex, ordered)
     return CategoricalPool{V}(index, invindex, order)
 end
 
-function CategoricalPool{V, S, T <: Integer}(invindex::Dict{S, T}, ordered::Vector{S})
+function (::CategoricalPool{V}){V, S, T <: Integer}(invindex::Dict{S, T}, ordered::Vector{S})
     invindex = convert(Dict{S, RefType}, invindex)
     index = buildindex(invindex)
     order = buildorder(invindex, ordered)
@@ -37,7 +37,7 @@ function CategoricalPool{V, S, T <: Integer}(invindex::Dict{S, T}, ordered::Vect
 end
 
 # TODO: Add tests for this
-function CategoricalPool{V, S, T <: Integer}(index::Vector{S},
+function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S},
                                              invindex::Dict{S, T},
                                              ordered::Vector{S})
     invindex = convert(Dict{S, RefType}, invindex)
@@ -46,7 +46,7 @@ function CategoricalPool{V, S, T <: Integer}(index::Vector{S},
     return CategoricalPool{V}(index, invindex, order)
 end
 
-function Base.convert{V, S, T}(::Type{CategoricalPool{S}}, opool::CategoricalPool{T})
+function Base.convert{V, W, S, T}(::Type{CategoricalPool{V, S}}, opool::CategoricalPool{W, T})
     indexS = convert(Vector{S}, opool.index)
     invindexS = convert(Dict{S, RefType}, opool.invindex)
     return CategoricalPool{V}(indexS, invindexS, opool.order)

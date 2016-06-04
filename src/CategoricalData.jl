@@ -1,5 +1,5 @@
 module CategoricalData
-    export CategoricalPool
+    export CategoricalPool, NominalPool, OrdinalPool
     export NominalValue, OrdinalValue
     export NominalArray, NominalVector, NominalMatrix
     export OrdinalArray, OrdinalVector, OrdinalMatrix

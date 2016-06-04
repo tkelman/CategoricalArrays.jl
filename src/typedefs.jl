@@ -9,10 +9,10 @@ immutable CategoricalPool{V, T}
     order::Vector{RefType}
     valindex::Vector{V}
 
-    function CategoricalPool{V, T}(index::Vector{T},
+    function CategoricalPool{V, T}(::Type{V}, index::Vector{T},
                                    invindex::Dict{T, RefType},
                                    order::Vector{RefType})
-        pool = new{V, T}(index, invindex, order, V[])
+        pool = new(index, invindex, order, V[])
         buildvalues!(pool)
     end
 end
