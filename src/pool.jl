@@ -1,63 +1,66 @@
-function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T}, order::Vector{RefType})
-    invindex = convert(Dict{S, RefType}, invindex)
-    CategoricalPool{V, S}(index, invindex, order)
+for (P, V) in ((:NominalPool, :NominalValue), (:OrdinalPool, :OrdinalValue))
+    @eval begin
+        function $P{S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T}, order::Vector{RefType})
+            invindex = convert(Dict{S, RefType}, invindex)
+            $P{S, $V{S}}(index, invindex, order)
+        end
+
+        function $P{T}(index::Vector{T})
+            invindex = buildinvindex(index)
+            order = buildorder(index)
+            return $P(index, invindex, order)
+        end
+
+        function $P{S, T <: Integer}(invindex::Dict{S, T})
+            invindex = convert(Dict{S, RefType}, invindex)
+            index = buildindex(invindex)
+            order = buildorder(index)
+            return $P(index, invindex, order)
+        end
+
+        # TODO: Add tests for this
+        function $P{S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T})
+            invindex = convert(Dict{S, RefType}, invindex)
+            order = buildorder(index)
+            return $P(index, invindex, order)
+        end
+
+        function $P{T}(index::Vector{T}, ordered::Vector{T})
+            invindex = buildinvindex(index)
+            order = buildorder(invindex, ordered)
+            return $P(index, invindex, order)
+        end
+
+        function $P{S, T <: Integer}(invindex::Dict{S, T}, ordered::Vector{S})
+            invindex = convert(Dict{S, RefType}, invindex)
+            index = buildindex(invindex)
+            order = buildorder(invindex, ordered)
+            return $P(index, invindex, order)
+        end
+
+        # TODO: Add tests for this
+        function $P{S, T <: Integer}(index::Vector{S},
+                                     invindex::Dict{S, T},
+                                     ordered::Vector{S})
+            invindex = convert(Dict{S, RefType}, invindex)
+            index = buildindex(invindex)
+            order = buildorder(invindex, ordered)
+            return $P(index, invindex, order)
+        end
+
+        function Base.convert{S, T}(::Type{$P{S}}, opool::$P{T})
+            indexS = convert(Vector{S}, opool.index)
+            invindexS = convert(Dict{S, RefType}, opool.invindex)
+            return $P(indexS, invindexS, opool.order)
+        end
+
+        Base.convert{T}(::Type{$P}, opool::$P{T}) = opool
+        Base.convert{T}(::Type{$P{T}}, opool::$P{T}) = opool
+    end
 end
 
-function (::CategoricalPool{V}){V, T}(index::Vector{T})
-    invindex = buildinvindex(index)
-    order = buildorder(index)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-function (::CategoricalPool{V}){V, S, T <: Integer}(invindex::Dict{S, T})
-    invindex = convert(Dict{S, RefType}, invindex)
-    index = buildindex(invindex)
-    order = buildorder(index)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-# TODO: Add tests for this
-function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S}, invindex::Dict{S, T})
-    invindex = convert(Dict{S, RefType}, invindex)
-    order = buildorder(index)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-function (::CategoricalPool{V}){V, T}(index::Vector{T}, ordered::Vector{T})
-    invindex = buildinvindex(index)
-    order = buildorder(invindex, ordered)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-function (::CategoricalPool{V}){V, S, T <: Integer}(invindex::Dict{S, T}, ordered::Vector{S})
-    invindex = convert(Dict{S, RefType}, invindex)
-    index = buildindex(invindex)
-    order = buildorder(invindex, ordered)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-# TODO: Add tests for this
-function (::CategoricalPool{V}){V, S, T <: Integer}(index::Vector{S},
-                                             invindex::Dict{S, T},
-                                             ordered::Vector{S})
-    invindex = convert(Dict{S, RefType}, invindex)
-    index = buildindex(invindex)
-    order = buildorder(invindex, ordered)
-    return CategoricalPool{V}(index, invindex, order)
-end
-
-function Base.convert{V, W, S, T}(::Type{CategoricalPool{V, S}}, opool::CategoricalPool{W, T})
-    indexS = convert(Vector{S}, opool.index)
-    invindexS = convert(Dict{S, RefType}, opool.invindex)
-    return CategoricalPool{V}(indexS, invindexS, opool.order)
-end
-
-Base.convert{T}(::Type{CategoricalPool}, opool::CategoricalPool{T}) = opool
-Base.convert{V}(::Type{CategoricalPool{V}}, opool::CategoricalPool{V}) = opool
-Base.convert{V, T}(::Type{CategoricalPool{V, T}}, opool::CategoricalPool{V, T}) = opool
-
-function Base.show{V, T}(io::IO, opool::CategoricalPool{V, T})
-    @printf(io, "CategoricalPool{%s, %s}([%s])", V, T,
+function Base.show{T}(io::IO, opool::CategoricalPool{T})
+    @printf(io, "%s{%s}([%s])", typeof(opool).name, T,
             join(map(repr, levels(opool)[opool.order]), ","))
 end
 
@@ -89,7 +92,7 @@ function Base.append!(opool::CategoricalPool, levels)
     return opool
 end
 
-function Base.delete!{V, S}(opool::CategoricalPool{V, S}, level)
+function Base.delete!{S}(opool::CategoricalPool{S}, level)
     levelS = convert(S, level)
     if haskey(opool.invindex, levelS)
         ind = opool.invindex[levelS]
@@ -111,7 +114,7 @@ function Base.delete!(opool::CategoricalPool, levels...)
     return opool
 end
 
-function levels!{V, S, T}(opool::CategoricalPool{V, S}, newlevels::Vector{T})
+function levels!{S, T}(opool::CategoricalPool{S}, newlevels::Vector{T})
     for (k, v) in opool.invindex
         delete!(opool.invindex, k)
     end
@@ -130,7 +133,7 @@ function levels!{V, S, T}(opool::CategoricalPool{V, S}, newlevels::Vector{T})
     return newlevels
 end
 
-function levels!{V, S, T}(opool::CategoricalPool{V, S},
+function levels!{S, V, T}(opool::CategoricalPool{S, V},
                           newlevels::Vector{T},
                           ordered::Vector{T})
     if !allunique(newlevels)
@@ -150,7 +153,7 @@ end
 
 order{T}(opool::CategoricalPool{T}) = opool.order
 
-function order!{V, S, T}(opool::CategoricalPool{V, S}, ordered::Vector{T})
+function order!{S, T}(opool::CategoricalPool{S}, ordered::Vector{T})
     if !allunique(ordered)
         throw(ArgumentError(string("duplicated levels found: ",
                                    join(unique(filter(x->sum(ordered.==x)>1, ordered)), ", "))))

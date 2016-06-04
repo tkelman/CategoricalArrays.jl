@@ -1,6 +1,6 @@
 module CategoricalData
     export CategoricalPool, NominalPool, OrdinalPool
-    export NominalValue, OrdinalValue
+    export CategoricalValue, NominalValue, OrdinalValue
     export NominalArray, NominalVector, NominalMatrix
     export OrdinalArray, OrdinalVector, OrdinalMatrix
     export NullableNominalArray, NullableNominalVector, NullableNominalMatrix
@@ -16,9 +16,8 @@ module CategoricalData
     include("updateorder.jl")
     include("buildfields.jl")
 
-    include("categoricalpool.jl")
-    include("nominalvalue.jl")
-    include("ordinalvalue.jl")
+    include("pool.jl")
+    include("value.jl")
 
     include("array.jl")
     include("nullablearray.jl")

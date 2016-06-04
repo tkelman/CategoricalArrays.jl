@@ -2,12 +2,12 @@ module TestLevels
     using Base.Test
     using CategoricalData
 
-    pool = CategoricalPool([1, 2, 3])
+    pool = NominalPool([1, 2, 3])
 
     @test isa(levels(pool), Vector)
     @test length(levels(pool)) === 3
     @test levels(pool) == [1, 2, 3]
-    @test pool.valindex == [OrdinalValue(i, pool) for i in 1:3]
+    @test pool.valindex == [NominalValue(i, pool) for i in 1:3]
 
     for rep in 1:3
         push!(pool, 4)
